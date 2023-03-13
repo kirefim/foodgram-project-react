@@ -54,8 +54,8 @@ class Migration(migrations.Migration):
             name='IngredientsRecipe',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.SmallIntegerField(validators=[django.core.validators.MinValueValidator(limit_value=1, message='Количество не может быть менее 1')], verbose_name='Количество')),
-                ('ingredient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ingredients_recipe', to='recipes.ingredient')),
+                ('amount', models.PositiveSmallIntegerField(validators=[django.core.validators.MinValueValidator(limit_value=1, message='Количество не может быть менее 1')], verbose_name='Количество')),
+                ('ingredient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ingredients_recipe', to='recipes.ingredient', blank=False, null=False)),
             ],
         ),
         migrations.CreateModel(
@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=200, unique=True, verbose_name='Название рецепта')),
                 ('image', models.ImageField(upload_to='recipes/', unique=True, verbose_name='Ссылка на картинку')),
                 ('text', models.TextField(verbose_name='Описание рецепта')),
-                ('cooking_time', models.SmallIntegerField(validators=[django.core.validators.MinValueValidator(limit_value=1, message='Время приготовления не может быть менее 1 минуты')], verbose_name='Время приготовления')),
+                ('cooking_time', models.PositiveSmallIntegerField(validators=[django.core.validators.MinValueValidator(limit_value=1, message='Время приготовления не может быть менее 1 минуты')], verbose_name='Время приготовления')),
                 ('pub_date', models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='recipes', to=settings.AUTH_USER_MODEL, verbose_name='Автор рецепта')),
                 ('ingredients', models.ManyToManyField(related_name='recipes', through='recipes.IngredientsRecipe', to='recipes.ingredient', verbose_name='Список ингредиентов')),

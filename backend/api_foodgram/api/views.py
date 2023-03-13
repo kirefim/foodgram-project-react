@@ -1,60 +1,47 @@
-from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
-
 from django_filters.rest_framework import DjangoFilterBackend
-
+from djoser import views as drf_views
 from rest_framework import (
-    permissions as drf_permissions, mixins, status, viewsets,)
+    permissions as drf_permissions, status, viewsets,)
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from . import filters, permissions, renderers, serializers
+from . import filters, paginations, permissions, renderers, serializers
 from recipes.models import (
     Favorite, Follow, Ingredient, Recipe, ShoppingCart, Tag)
-
-
-User = get_user_model()
+from users.models import User
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = serializers.TagSerializer
-    pagination_class = None
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = serializers.IngredientSerializer
-    pagination_class = None
     filter_backends = (filters.IngredientFilter,)
     search_fields = ('^name',)
 
 
-class UserViewSet(mixins.CreateModelMixin,
-                  mixins.ListModelMixin,
-                  viewsets.GenericViewSet):
+class UserViewSet(drf_views.UserViewSet):
     queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
-
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return serializers.UserCreateSerializer
-        return super().get_serializer_class()
+    pagination_class = paginations.CustomPagnation
 
     @action(['post', 'delete'], detail=True,
             permission_classes=[drf_permissions.IsAuthenticated])
-    def subscribe(self, request, pk=None):
+    def subscribe(self, request, id=None):
         if request.method == 'POST':
             serializer = serializers.FollowSerializer(
-                data={'user': request.user.id, 'author': pk},
+                data={'user': request.user.id, 'author': id},
                 context={'request': request}
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        get_object_or_404(Follow, user=request.user, author=pk).delete()
+        get_object_or_404(Follow, user=request.user, author=id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False,
@@ -77,6 +64,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 .prefetch_related('favorite', 'shoppingcart'))
     serializer_class = serializers.RecipeSerializer
     permission_classes = [permissions.IsAuthorOrReadOnly]
+    pagination_class = paginations.CustomPagnation
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.RecipeFilter
 

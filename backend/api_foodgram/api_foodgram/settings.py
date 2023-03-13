@@ -2,9 +2,10 @@ import os
 
 from dotenv import load_dotenv
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-load_dotenv(dotenv_path=BASE_DIR)
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'secret password')
 
@@ -102,7 +103,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 MEDIA_URL = '/media/'
 
@@ -115,15 +116,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_PAGINATION_CLASS':
-        'rest_framework.pagination.PageNumberPagination',
-    "PAGE_SIZE": 10,
 }
 
 DJOSER = {
     'SERIALIZERS': {
         'user': 'api.serializers.UserSerializer',
-        'user_create': 'api.serializers.UserCreateSerializer',
         'current_user': 'api.serializers.UserSerializer',
     },
     'PERMISSIONS': {
@@ -133,6 +130,7 @@ DJOSER = {
     'HIDE_USERS': False,
 }
 
+DEFAULT_PAGE_SIZE = 6
 DEFAULT_MAX_LENGTH_EMAIL = 256
 DEFAULT_MAX_LENGTH_USER_FIEELD = 150
 DEFAULT_MAX_LENGTH = 200

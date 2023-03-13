@@ -134,3 +134,6 @@ dmypy.json
 #static files
 static/
 media/
+
+.project
+.DS_Store

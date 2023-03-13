@@ -22,12 +22,12 @@ class RecipeFilter(filters.FilterSet):
         field_name='shoppingcart', method='favorite_or_shopping_cart'
     )
 
+    class Meta:
+        model = Recipe
+        fields = ['author']
+
     def favorite_or_shopping_cart(self, queryset, name, value):
         if not value:
             return queryset
         filter_field = '__'.join([name, 'user'])
-        return queryset.filter(**{filter_field: self.request.user})
-
-    class Meta:
-        model = Recipe
-        fields = ['author']
+        return queryset.filter(**{filter_field: self.request.user.id})

@@ -2,15 +2,12 @@ from io import BytesIO
 import os
 
 from django.http import HttpResponse
-
+from django.conf import settings
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
-
 from rest_framework import renderers
-
-from api_foodgram.settings import BASE_DIR
 
 
 class PDFRenderer(renderers.BaseRenderer):
@@ -29,7 +26,7 @@ class PDFRenderer(renderers.BaseRenderer):
         buffer = BytesIO()
         doc = canvas.Canvas(buffer, A4)
         font_filename = os.path.join(
-            BASE_DIR, 'data', 'Montserrat Alternates.ttf'
+            settings.BASE_DIR, 'data', 'Montserrat Alternates.ttf'
         )
         pdfmetrics.registerFont(TTFont('Montserrat_Alternates', font_filename))
         doc.setFont('Montserrat_Alternates', 45)

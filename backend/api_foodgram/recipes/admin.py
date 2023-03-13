@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
 
 from . import models
 
@@ -20,11 +21,13 @@ class IngredientAdmin(admin.ModelAdmin):
 
 class IngredientsInLine(admin.TabularInline):
     model = models.IngredientsRecipe
+    extra = 0
+    min_num = 1
 
 
 @admin.register(models.Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'author',)
+    list_display = ('name', 'author', 'get_ingredients', 'get_favorites_count')
     list_filter = ('name', 'author', 'tags')
     search_fields = ('name',)
     inlines = (IngredientsInLine,)
@@ -32,11 +35,12 @@ class RecipeAdmin(admin.ModelAdmin):
 
     @admin.display(description='Ингредиенты')
     def get_ingredients(self, obj):
-        return ', '.join(ingredient.name for ingredient in obj.ingredients)
+        return ', '.join(
+            [ingredient.name for ingredient in obj.ingredients.all()])
 
     @admin.display(description='Добавлений в избранное')
     def get_favorites_count(self, obj):
-        return obj.favorites.count()
+        return obj.favorite.count()
 
 
 class FavoriteShoppingCart(admin.ModelAdmin):
@@ -54,3 +58,13 @@ class FavoriteAdmin(FavoriteShoppingCart):
 @admin.register(models.ShoppingCart)
 class ShoppingCartAdmin(FavoriteShoppingCart):
     pass
+
+
+@admin.register(models.Follow)
+class FollowAdmin(admin.ModelAdmin):
+    list_display = ('user', 'author',)
+    list_filter = ('user', 'author')
+    empty_value_display = '-пусто-'
+
+
+admin.site.unregister(Group)

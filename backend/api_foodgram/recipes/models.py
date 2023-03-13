@@ -1,18 +1,16 @@
 from django.core import validators
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .validators import validate_hex
-from api_foodgram.settings import (
-    AUTH_USER_MODEL, DEFAULT_MAX_LENGTH, DEFAULT_MIN_VALUE
-)
 
 
 class Ingredient(models.Model):
     name = models.CharField(
-        'Ингредиент', max_length=DEFAULT_MAX_LENGTH,)
+        'Ингредиент', max_length=settings.DEFAULT_MAX_LENGTH,)
     measurement_unit = models.CharField(
-        'Единицы измерения', max_length=DEFAULT_MAX_LENGTH,)
+        'Единицы измерения', max_length=settings.DEFAULT_MAX_LENGTH,)
 
     class Meta:
         ordering = ['name']
@@ -29,14 +27,15 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField('Тэг', max_length=DEFAULT_MAX_LENGTH, unique=True)
+    name = models.CharField(
+        'Тэг', max_length=settings.DEFAULT_MAX_LENGTH, unique=True)
     color = models.CharField(
         'Цвет в HEX',
         max_length=7,
-        validators=[validate_hex,]
+        validators=[validate_hex]
     )
     slug = models.SlugField(
-        'Ссылка на тэг', max_length=DEFAULT_MAX_LENGTH,
+        'Ссылка на тэг', max_length=settings.DEFAULT_MAX_LENGTH,
     )
 
     class Meta:
@@ -50,14 +49,17 @@ class Tag(models.Model):
 
 class Recipe(models.Model):
     author = models.ForeignKey(
-        AUTH_USER_MODEL,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='recipes',
         verbose_name='Автор рецепта',
         db_index=True,
     )
     name = models.CharField(
-        'Название рецепта', max_length=DEFAULT_MAX_LENGTH, unique=True)
+        'Название рецепта',
+        max_length=settings.DEFAULT_MAX_LENGTH,
+        unique=True
+    )
     image = models.ImageField(
         'Ссылка на картинку', upload_to='recipes/', unique=True)
     text = models.TextField('Описание рецепта')
@@ -73,11 +75,11 @@ class Recipe(models.Model):
         related_name='recipes',
         db_index=True,
     )
-    cooking_time = models.SmallIntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         validators=[
             validators.MinValueValidator(
-                limit_value=DEFAULT_MIN_VALUE,
+                limit_value=settings.DEFAULT_MIN_VALUE,
                 message='Время приготовления не может быть менее 1 минуты'
             )
         ],
@@ -112,13 +114,15 @@ class IngredientsRecipe(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        related_name='ingredients_recipe'
+        related_name='ingredients_recipe',
+        blank=False,
+        null=False,
     )
-    amount = models.SmallIntegerField(
+    amount = models.PositiveSmallIntegerField(
         'Количество',
         validators=[
             validators.MinValueValidator(
-                limit_value=DEFAULT_MIN_VALUE,
+                limit_value=settings.DEFAULT_MIN_VALUE,
                 message='Количество не может быть менее 1'
             )
         ]
@@ -127,14 +131,14 @@ class IngredientsRecipe(models.Model):
 
 class Follow(models.Model):
     user = models.ForeignKey(
-        AUTH_USER_MODEL,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='follower',
         verbose_name='Подписчик',
         db_index=True,
     )
     author = models.ForeignKey(
-        AUTH_USER_MODEL,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='following',
         verbose_name='Подписка',
@@ -152,16 +156,14 @@ class Follow(models.Model):
 
 class FavoriteShoppingCart(models.Model):
     user = models.ForeignKey(
-        AUTH_USER_MODEL,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='%(class)s',
         verbose_name='Пользователь',
         db_index=True,
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='%(class)s',
         verbose_name='Рецепт',
     )
 
@@ -182,6 +184,7 @@ class Favorite(FavoriteShoppingCart):
     class Meta(FavoriteShoppingCart.Meta):
         verbose_name = "Избранное юзера"
         verbose_name_plural = "Избранное"
+        default_related_name = 'favorite'
 
 
 class ShoppingCart(FavoriteShoppingCart):
@@ -189,3 +192,4 @@ class ShoppingCart(FavoriteShoppingCart):
     class Meta(FavoriteShoppingCart.Meta):
         verbose_name = "Список покупок"
         verbose_name_plural = "Списки покупок"
+        default_related_name = 'shoppingcart'

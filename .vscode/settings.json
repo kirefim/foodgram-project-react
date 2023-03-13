@@ -1,6 +1,3 @@
 {
-    "python.envFile": "${workspaceFolder}/backend/.venv",
-    "python.defaultInterpreterPath": "/Users/kirillefimkin/Dev/6_Diplome/foodgram-project-react/backend/venv/bin/python3.9",
-    "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true
+    "python.terminal.activateEnvInCurrentTerminal": true
 }
