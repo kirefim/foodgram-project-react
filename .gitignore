@@ -135,5 +135,11 @@ dmypy.json
 static/
 media/
 
-.project
 .DS_Store
+
+#dbeaver
+.dbeaver/
+.project
+
+#node
+node_modules/

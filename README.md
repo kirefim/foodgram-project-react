@@ -1,4 +1,9 @@
 # Книга рецептов FoodGRAM
+![Bage](https://github.com/kirefim/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+
+[ссылка](https://yatube-kirefim.ddns.net/redoc/) на докуметацию
+
+https://yatube-kirefim.ddns.net/ проект на сервере
 
 ### Описание
 
@@ -59,44 +64,25 @@ python3 manage.py migrate
 ```
 python3 manage.py runserver
 ```
-
-**Для локального запуска проекта целиком (необходим установленный Docker):**
-
-Перейдите в директорию infra:
-```
-cd foodgram-project-react/infra
-```
-Создайте файл виртуального окружения **.env**
-```
-touch .env
-```
-Пример заполнения файла:
-```
-#database
-DB_ENGINE=django.db.backends.postgresql # указываем, что работаем с postgresql
-DB_NAME=postgres # имя базы данных
-POSTGRES_USER=postgres # логин для подключения к базе данных
-POSTGRES_PASSWORD=1488 # пароль для подключения к БД (установите свой)
-DB_HOST=db # название сервиса (контейнера)
-DB_PORT=5432 # порт для подключения к БД
-#main settings
-SECRET_KEY=secret_key
-DEBUG=True
-PRODUCTION=False
-```
-Создайте образы и соберите контейнеры:
-```
-docker-compose up -d --build
-```
-Список доступных эндпоинтов к API доступен по адресу  http://localhost/api/
-
-Локально проект доступен по адресу http://localhost/
+Список доступных эндпоинтов к API доступен по адресу  http://localhost:8000/api/
 
 Для доступа к админ-панели необходимо создать суперюзера:
 ```
 docker-compose exec web python manage.py createsuperuser
 ```
-Админ-панель доступна по адресу http://localhost/admin/
+Админ-панель доступна по адресу http://localhost:8000/admin/
+
+**Для подключения SPA к API (неообходим установленный Node.js)**
+
+В новом окне терминала переходим в директорию frontend/ и устанавливаем зависимости:
+```
+npm install --legacy-peer-deps
+```
+Запускаем SPA фронтенд:
+```
+npm run start
+```
+Полностью проект доступен по адресу http://localhost:3000
 
 ### Стек технологий
 | | |

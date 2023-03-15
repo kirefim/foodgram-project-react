@@ -105,6 +105,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             Ingredient.objects.filter(recipes__shoppingcart__user=request.user)
             .order_by('name').annotate(
                 amount=Sum('ingredients_recipe__amount')
-                )
+            )
         )
         return Response(ingredients)

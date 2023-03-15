@@ -18,8 +18,7 @@ class User(AbstractUser):
         unique=True,
         db_index=True,
         validators=[UnicodeUsernameValidator(
-            message='Введите корректное имя пользователя'
-            )
+            message='Введите корректное имя пользователя')
         ],
         help_text='Разрешены латинские буквы, цифры, символы: @/./+/-/_'
     )
