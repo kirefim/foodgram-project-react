@@ -1,7 +1,7 @@
 # Книга рецептов FoodGRAM
 ![Bage](https://github.com/kirefim/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
-[ссылка](https://yatube-kirefim.ddns.net/redoc/) на докуметацию
+[ссылка](https://ellrik92.ddns.net/redoc/) на докуметацию
 
 https://yatube-kirefim.ddns.net/ проект на сервере
 

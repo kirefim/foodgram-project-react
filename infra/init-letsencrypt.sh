@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=yatube-kirefim.ddns.net
+domains=ellrik92.ddns.net
 rsa_key_size=4096
 data_path="./data/certbot"
 email="ellrik92@yandex.ru" # Adding a valid address is strongly recommended
