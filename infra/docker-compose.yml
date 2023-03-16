@@ -57,7 +57,7 @@ services:
     depends_on:
       - nginx
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-
+    command: certonly -v --webroot -w /var/www/ -d ${DOMAIN} --email ${SSL_CERT_EMAIL} --agree-tos --no-eff-email
 volumes:
   data_db:
   static_value:
