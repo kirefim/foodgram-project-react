@@ -25,6 +25,7 @@ services:
     image: ellrik/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
+      - static_value:/app/buid/static/
     depends_on:
       - db
     container_name: foodgram_frontend
@@ -37,7 +38,6 @@ services:
     volumes:
       - static_value:/var/html/static/
       - media_value:/var/html/media/
-      - ../frontend/build/static:/var/html/static/
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
