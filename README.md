@@ -3,7 +3,7 @@
 
 [ссылка](https://ellrik92.ddns.net/api/docs/) на документацию
 
-https://yatube-kirefim.ddns.net/ проект на сервере
+https://ellrik92.ddns.net/ проект на сервере
 
 ### Описание
 
