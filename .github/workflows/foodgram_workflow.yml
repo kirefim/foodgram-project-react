@@ -67,4 +67,5 @@ jobs:
           script: |
             cd ~/foodgram/infra_foodgram/
             sudo docker-compose down
+            sudo docker rmi ellrik/foodgram_backend ellrik/foodgram_frontend
             sudo docker-compose up
